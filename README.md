@@ -4,4 +4,4 @@ Access an SP, after authentication on an IdP using a special authentication sour
 
 Clients developed in two ways: 
   - POST BIND 
-  - Browser simulation
+  - HTTP REDIRECT BIND
