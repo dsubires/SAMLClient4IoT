@@ -1,13 +1,18 @@
-/*
+/**
+ * ClientHTTPRedirect
  * 
+ * Simple SAML client developed in JAVA. Access an SP, after authentication on
+ * an IdP through HTTP REDIRECT BIND (without SAML library) using a special authentication source for
+ * devices (IoT).
+ * 
+ * @author Subires
  */
-package com.dsubires.ClientSamlHTTPredirect;
+
+package com.dsubires.saml;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.representation.Form;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -17,7 +22,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -27,35 +31,24 @@ import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class ClientBS.
- */
-public class ClientBS {
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 * @throws InterruptedException the interrupted exception
-	 */
-	public static void main(String args[]) throws InterruptedException {
+public class ClientHTTPRedirect {
+
+	public static void main(String args[]) {
 		NewCookie cookieSimpleSAML = null;
 		NewCookie cookieIdpSimpleSAMLAuthToken = null;
-		ClientConfig config = new DefaultClientConfig();
-		Client client = Client.create(config);
+		Client client = Client.create();
 		String SPURL = "https://sp2.gidlab.rnp.br/test.php";
 		// String SPURL = "https://37.48.106.66/test.php";
-		String clientId = "";
-		String serverId = "";
+		String clientId = "Baria";
+		String serverId = "Alice";
 
 		try {
 
 			disableValidationSSL();
 			long totalTimeS = System.nanoTime();
-			
 
-		//	long startTime = System.nanoTime();
+			// long startTime = System.nanoTime();
 			client.setFollowRedirects(Boolean.FALSE);
 
 			/**
@@ -68,7 +61,7 @@ public class ClientBS {
 					.accept(MediaType.APPLICATION_XHTML_XML_TYPE, MediaType.APPLICATION_XML_TYPE,
 							MediaType.TEXT_HTML_TYPE, MediaType.TEXT_XML_TYPE)
 					.header("Accept-Encoding", "deflate").get(ClientResponse.class);
-			//long endTime = System.nanoTime();
+			// long endTime = System.nanoTime();
 
 			Iterator<NewCookie> iteratorCookie = response.getCookies().iterator();
 			cookieSimpleSAML = new NewCookie("name", "value"); // initialization
@@ -87,7 +80,7 @@ public class ClientBS {
 							MediaType.TEXT_HTML_TYPE)
 					.header("Accept-Encoding", "deflate").header("Cookie", "SimpleSAML=" + cookieSimpleSAML.getValue())
 					.get(ClientResponse.class);
-			//endTime = System.nanoTime();
+			// endTime = System.nanoTime();
 
 			String urlFinal = urlWithDataForm(response.getEntity(String.class));
 
@@ -148,7 +141,7 @@ public class ClientBS {
 							MediaType.TEXT_HTML_TYPE)
 					.header("Accept-Encoding", "deflate").header("Cookie", "SimpleSAML=" + cookieSimpleSAML.getValue())
 					.get(ClientResponse.class);
-			//startTime = System.nanoTime();
+			// startTime = System.nanoTime();
 
 			webResource = client.resource(endpoint.toString() + "?");
 			Form formUser = new Form();
@@ -166,9 +159,10 @@ public class ClientBS {
 							MediaType.TEXT_HTML_TYPE)
 					.header("Accept-Encoding", "deflate").header("Cookie", "SimpleSAML=" + cookieSimpleSAML.getValue())
 					.post(ClientResponse.class, formUser);
-			//endTime = System.nanoTime();
-		//	System.out
-		//			.println("POSTing the ClientID and receive an answer. " + ((endTime - startTime) / 1000000) + "ms");
+			// endTime = System.nanoTime();
+			// System.out
+			// .println("POSTing the ClientID and receive an answer. " + ((endTime -
+			// startTime) / 1000000) + "ms");
 
 			/**
 			 *
@@ -193,8 +187,8 @@ public class ClientBS {
 			int foundChallenge = challenge.indexOf("challengeEncrypted");
 			if (foundChallenge != -1)
 				challenge = challenge.substring(foundChallenge + 19, challenge.length());
-
 			challenge = challenge.replace('|', ' ');
+
 			// Run the application in C to get the encrypted response
 			List<String> challengeList = new ArrayList<String>();
 			challengeList.add("/home/ctgid/deviceauthentication/client");
@@ -224,7 +218,7 @@ public class ClientBS {
 			 * POST login.form Response 302: Redirect IdP -> SP
 			 *
 			 */
-		//	startTime = System.nanoTime();
+			// startTime = System.nanoTime();
 			webResource = client.resource(endpoint.toString());
 
 			// Create form with the user and the challenge response (password)
@@ -249,15 +243,14 @@ public class ClientBS {
 			/**
 			 * From the IDP response, we get SAMLResponse and the SimpleSAMLAuthToken cookie
 			 */
-		//	startTime = System.nanoTime();
+			// startTime = System.nanoTime();
 			String str1 = output.substring(output.indexOf("SAMLResponse") + 21, output.length());
 			String str2 = str1.substring(0, str1.indexOf("\"")); // str2 == SAMLResponse
 
 			iteratorCookie = response.getCookies().iterator();
-			cookieIdpSimpleSAMLAuthToken = new NewCookie("name", "value"); 
+			cookieIdpSimpleSAMLAuthToken = new NewCookie("name", "value");
 			cookieIdpSimpleSAMLAuthToken = (NewCookie) iteratorCookie.next();
 			cookieSimpleSAML = (NewCookie) iteratorCookie.next();
-
 
 			/**
 			 *
@@ -267,7 +260,7 @@ public class ClientBS {
 
 			webResource = client
 					.resource("https://sp2.gidlab.rnp.br/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
-			//		.resource("https://37.48.106.66/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
+			// .resource("https://37.48.106.66/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
 
 			Form form = new Form();
 			form.add("SAMLResponse", str2);
@@ -299,8 +292,9 @@ public class ClientBS {
 							+ cookieIdpSimpleSAMLAuthToken.getValue() + ";SimpleSAML=" + cookieSimpleSAML.getValue())
 					.get(ClientResponse.class);
 
-			//endTime = System.nanoTime();
-			//System.out.println("POST the SAMLResponse and GET resource " + ((endTime - startTime) / 1000000) + "ms");
+			// endTime = System.nanoTime();
+			// System.out.println("POST the SAMLResponse and GET resource " + ((endTime -
+			// startTime) / 1000000) + "ms");
 
 			System.out.println(response.toString());
 			System.out.println(response.getEntity(String.class));
@@ -316,9 +310,8 @@ public class ClientBS {
 	}
 
 	/**
-	 * Disable validation SSL.
-	 *
-	 * @throws Exception the exception
+	 * Disable validation SSL. It allows access to SP and IDP even if they do not
+	 * have certificates signed by a valid entity.
 	 */
 	private static void disableValidationSSL() throws Exception {
 		// Create a trust manager that does not validate certificate chains
@@ -351,10 +344,11 @@ public class ClientBS {
 	}
 
 	/**
-	 * Url with data form.
+	 * Generate the URL needed to complete the IDP election form.
 	 *
-	 * @param input the input
-	 * @return the string
+	 * @param input
+	 *            HTML code of the IDP election page
+	 * @return URL as string
 	 */
 	private static String urlWithDataForm(String input) {
 		String[] html = input.split(">");

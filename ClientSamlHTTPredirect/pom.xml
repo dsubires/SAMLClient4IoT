@@ -5,6 +5,9 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>HTTPredirect</name>
   <description>Simple saml cliente based on http redirect bind.</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencies>
      <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-client -->
     <dependency>
@@ -29,6 +32,32 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+       <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>uber-${artifactId}-${version}</finalName>
+				</configuration>
+			</plugin>
+		      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jar-plugin</artifactId>
+		<configuration>
+			<archive>
+				<manifest>
+					<mainClass>com.dsubires.saml.ClientHTTPRedirect</mainClass>
+				</manifest>
+			</archive>
+		</configuration>
       </plugin>
     </plugins>
   </build>
