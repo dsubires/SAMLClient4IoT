@@ -40,8 +40,8 @@ public class ClientHTTPRedirect {
 		Client client = Client.create();
 		String SPURL = "https://sp2.gidlab.rnp.br/test.php";
 		// String SPURL = "https://37.48.106.66/test.php";
-		String clientId = "Baria";
-		String serverId = "Alice";
+		String clientId = "";
+		String serverId = "";
 
 		try {
 
