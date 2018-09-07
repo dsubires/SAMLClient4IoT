@@ -38,10 +38,11 @@ public class ClientHTTPRedirect {
 		NewCookie cookieSimpleSAML = null;
 		NewCookie cookieIdpSimpleSAMLAuthToken = null;
 		Client client = Client.create();
-		String SPURL = "https://sp2.gidlab.rnp.br/test.php";
-		// String SPURL = "https://37.48.106.66/test.php";
-		String clientId = "";
-		String serverId = "";
+		//String SPURL = "https://sp2.gidlab.rnp.br/test.php";
+		String SPURL = "https://37.48.106.66/test.php";
+		//String SPURL = "http://37.48.106.66:8081/sp";
+		String clientId = "Baria";
+		String serverId = "Alice";
 
 		try {
 
@@ -81,6 +82,7 @@ public class ClientHTTPRedirect {
 					.header("Accept-Encoding", "deflate").header("Cookie", "SimpleSAML=" + cookieSimpleSAML.getValue())
 					.get(ClientResponse.class);
 			// endTime = System.nanoTime();
+			
 
 			String urlFinal = urlWithDataForm(response.getEntity(String.class));
 
@@ -89,6 +91,7 @@ public class ClientHTTPRedirect {
 			 * GET selectIdP.form Response 302: Redirect SP -> SP
 			 *
 			 */
+			
 
 			webResource = client.resource(urlFinal);
 			response = webResource
@@ -259,8 +262,9 @@ public class ClientHTTPRedirect {
 			 */
 
 			webResource = client
-					.resource("https://sp2.gidlab.rnp.br/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
-			// .resource("https://37.48.106.66/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
+					.resource("https://37.48.106.66/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
+					//.resource("https://sp2.gidlab.rnp.br/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp");
+			
 
 			Form form = new Form();
 			form.add("SAMLResponse", str2);
@@ -344,7 +348,7 @@ public class ClientHTTPRedirect {
 	}
 
 	/**
-	 * Generate the URL needed to complete the IDP election form.
+	 * Generate the URL needed to complete the IDP selection form.
 	 *
 	 * @param input
 	 *            HTML code of the IDP election page
@@ -369,12 +373,16 @@ public class ClientHTTPRedirect {
 				returnValue = "return=" + returnValue;
 			} else if (html[i].contains("<option value=")) {
 				if (html[i].contains("idpiot")) {
-					optionValue = html[i].substring(15, html[i].length() - 1);
-					optionValue = "idpentityid=" + optionValue;
+					//optionValue = html[i].substring(15, html[i].length() - 1);
+					//optionValue = "idpentityid=" + optionValue.replaceAll("option value=\"", "");
+					//optionValue = "idpentityid=" + optionValue;
+					optionValue = "idpentityid=idpiot";
+					
 				}
 			}
 
 		}
+	
 		return url + "?" + entityValue + "&" + returnValue + "&" + returnID + "&" + optionValue;
 	}
 

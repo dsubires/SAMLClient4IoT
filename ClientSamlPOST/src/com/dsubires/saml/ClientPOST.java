@@ -52,8 +52,8 @@ public class ClientPOST {
 		Client client = Client.create(config);
 		String SPURL = "https://37.48.106.66/test.php";
 		// String SPURL = "https://sp2.gidlab.rnp.br/test.php";
-		String clientId = "";
-		String serverId = "";
+		String clientId = "Baria";
+		String serverId = "Alice";
 
 		try {
 
