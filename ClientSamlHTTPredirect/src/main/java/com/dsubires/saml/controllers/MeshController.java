@@ -26,34 +26,23 @@ public class MeshController {
 	private String meshAuthcode;
 
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String matchRequest() {
-		logger.info("hello world");
-		return "{ \"Hello\" :  \"world\" }";
-	}
-	
 	@RequestMapping(value = "/forward", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String forward(@RequestBody MeshPetition meshPetition) {
 		
 		if(meshPetition != null && meshAuthcode.equals(meshPetition.getAuthcode())) {
 			clientService.sendDeviceStatus(meshPetition.getDeviceStatus());
 			logger.info("deviceStatus forwarded successfully");
-			return "{ \"msg\" : \"deviceStatus forwarded successfully\" }";	
+			return "{\n\r\"msg\" : \"deviceStatus forwarded successfully\" }";	
 		}else {
-			return "{\n\r \"error\" : \"authcode error\"\n}\n";
+			return "{\n\r\"error\" : \"authcode error\" \r\n}";
 		}
 	}
 	
-	/*
-	 * only for test
-	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String updateSensort(@RequestBody DeviceStatus deviceStatus) {
-
-		clientService.sendDeviceStatus(deviceStatus);
-		logger.info("deviceStatus sent to server at {}.", new Date());
-		return "{ \"msg\" : \"deviceStatus sent to server successfully\" }";
+	@RequestMapping(value = "/test", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String matchRequest() {
+		logger.info("hello world");
+		return "{\n\r \"Hello\" :  \"world\"\n}";
 	}
-    */
-
+	
 }
 
