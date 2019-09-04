@@ -35,12 +35,12 @@ public class MeshController {
 	@RequestMapping(value = "/forward", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public String forward(@RequestBody MeshPetition meshPetition) {
 		
-		if(meshPetition.getAuthcode().equals(meshAuthcode)) {
+		if(meshPetition != null && meshAuthcode.equals(meshPetition.getAuthcode())) {
 			clientService.sendDeviceStatus(meshPetition.getDeviceStatus());
 			logger.info("deviceStatus forwarded successfully");
 			return "{ \"msg\" : \"deviceStatus forwarded successfully\" }";	
 		}else {
-			return "{ \r\n \"error\" : \"authcode error\" \r\n}";
+			return "{\n\r \"error\" : \"authcode error\"\n}\n";
 		}
 	}
 	
