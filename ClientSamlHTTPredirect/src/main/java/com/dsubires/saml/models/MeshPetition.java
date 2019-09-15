@@ -1,5 +1,13 @@
 package com.dsubires.saml.models;
 
+/**
+ * 
+ * Objeto que representa y encapsula la información enviada en una petición
+ * mesh. (POJO).
+ * 
+ * @author David Subires
+ *
+ */
 public class MeshPetition {
 
 	DeviceStatus deviceStatus;

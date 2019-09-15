@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.dsubires</groupId>
-	<artifactId>monitoringDataELK</artifactId>
+	<artifactId>ClientHttpRedirect</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>SAML Client</name>
+	<description>SAML Client adapted for IoT</description>
 	<properties>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -51,11 +51,12 @@
 		</dependency>
 	</dependencies>
 	<build>
+	
 		<plugins>
-			<plugin>
+		  <plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
+			</plugin>	
 		</plugins>
 	</build>
 

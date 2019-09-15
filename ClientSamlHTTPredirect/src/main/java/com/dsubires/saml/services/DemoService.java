@@ -1,5 +1,6 @@
 package com.dsubires.saml.services;
 
+import java.io.File;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +12,15 @@ import org.springframework.stereotype.Service;
 
 import com.dsubires.saml.models.DeviceStatus;
 
+/**
+ * 
+ * Servicio que genera la simulación de dispositivos para testear las
+ * funcionalidades de estos.
+ * 
+ * @author David Subires Parra
+ *
+ */
+
 @Service
 public class DemoService {
 
@@ -18,7 +28,7 @@ public class DemoService {
 	private String meshHost;
 	private Logger logger = LogManager.getLogger("scheduledTask");
 	@Autowired
-	ClientService clientService;
+	ClientSamlService clientService;
 	String[] devices = new String[] { "Device 1", "Device 2", "Device 3", "Device 4", "Device 5", "Device MESH" };
 
 	/**
@@ -93,21 +103,24 @@ public class DemoService {
 	@Scheduled(fixedDelay = 15000)
 	public void deviceMeshdemo() {
 
-		logger.info("starting device mesh demo");
-		String[] devices = new String[] { "Device 1", "Device 2", "Device 3", "Device 4", "Device 5" };
-		int requests = (int) (Math.random() * ((100 - 50) + 1)) + 50;
+		File file = new File("skip-mesh-demo");
+		if (!file.exists()) {
+			logger.info("starting device mesh demo");
+			int requests = (int) (Math.random() * ((100 - 50) + 1)) + 50;
+			int indexMeshDevice = 5;
 
-		while (requests > 0) {
+			while (requests > 0) {
 
-			int temperature = (int) (Math.random() * ((59 - 30) + 1)) + 30;
-			DeviceStatus deviceStatus = new DeviceStatus();
-			deviceStatus.setDevice(devices[5]);
-			deviceStatus.setTemperature(temperature);
-			clientService.sendDeviceStatusMesh("localhost", deviceStatus);
-			requests--;
+				int temperature = (int) (Math.random() * ((59 - 30) + 1)) + 30;
+				DeviceStatus deviceStatus = new DeviceStatus();
+				deviceStatus.setDevice(devices[indexMeshDevice]);
+				deviceStatus.setTemperature(temperature);
+				clientService.sendDeviceStatusMesh("localhost", deviceStatus);
+				requests--;
+			}
+
+			logger.info("stopping device mesh demo");
 		}
-
-		logger.info("stopping device mesh demo");
 	}
 
 }

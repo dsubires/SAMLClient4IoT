@@ -2,7 +2,8 @@ package com.dsubires.saml.models;
 
 /**
  * 
- * POJO. Represents a tuple inserted in elasticsearch by the devices.
+ * Objeto que representa y encapsula la información enviada por un sensor
+ * al sevidor. (POJO)
  * 
  * @author David Subires
  *
@@ -40,6 +41,5 @@ public class DeviceStatus implements java.io.Serializable {
 	public String toString() {
 		return "DeviceStatus [device=" + device + ", temperature=" + temperature + "]";
 	}
-
 
 }
