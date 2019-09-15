@@ -115,7 +115,7 @@ public class DemoService {
 				DeviceStatus deviceStatus = new DeviceStatus();
 				deviceStatus.setDevice(devices[indexMeshDevice]);
 				deviceStatus.setTemperature(temperature);
-				clientService.sendDeviceStatusMesh("localhost", deviceStatus);
+				clientService.sendDeviceStatusMesh(meshHost, deviceStatus);
 				requests--;
 			}
 
